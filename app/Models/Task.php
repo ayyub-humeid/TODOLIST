@@ -13,6 +13,7 @@ class Task extends Model
     protected $fillable = [
         'title',
         'priority',
+        'status',
         'due_date',
         'details',
     ];
@@ -30,6 +31,19 @@ class Task extends Model
             'high' => 'bg-error-container text-on-error-container',
             'medium' => 'bg-surface-container-high text-on-surface-variant',
             'low' => 'bg-surface-container-low text-on-primary-container',
+            default => 'bg-surface-container text-on-surface-variant',
+        };
+    }
+
+    /**
+     * Get the CSS classes for the status badge.
+     */
+    public function getStatusColorAttribute(): string
+    {
+        return match (strtolower($this->status)) {
+            'completed' => 'bg-secondary text-on-secondary',
+            'in_progress' => 'bg-secondary-fixed/30 text-secondary',
+            'pending' => 'bg-surface-container-highest text-on-surface-variant',
             default => 'bg-surface-container text-on-surface-variant',
         };
     }

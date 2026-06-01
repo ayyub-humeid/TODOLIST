@@ -83,21 +83,43 @@
                         <label
                             class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Priority</label>
                         <input type="hidden" name="priority" id="priority-input" value="{{ old('priority', $task->priority ?? 'Medium') }}">
-                        <div class="flex p-1 bg-surface-container-low rounded-lg border border-outline-variant" id="priority-segments">
+                        <div class="flex p-1 bg-surface-container-low rounded-lg border border-outline-variant">
                             <button
-                                onclick="setPriority('Low')"
+                                onclick="setSegmentValue('priority', 'Low')"
                                 class="priority-btn flex-1 py-2 text-center rounded-md font-label-md text-label-md transition-all {{ old('priority', $task->priority ?? 'Medium') === 'Low' ? 'bg-white shadow-sm text-secondary font-bold' : 'text-on-surface-variant hover:bg-surface-container-high' }}"
                                 type="button">Low</button>
                             <button
-                                onclick="setPriority('Medium')"
+                                onclick="setSegmentValue('priority', 'Medium')"
                                 class="priority-btn flex-1 py-2 text-center rounded-md font-label-md text-label-md transition-all {{ old('priority', $task->priority ?? 'Medium') === 'Medium' ? 'bg-white shadow-sm text-secondary font-bold' : 'text-on-surface-variant hover:bg-surface-container-high' }}"
                                 type="button">Medium</button>
                             <button
-                                onclick="setPriority('High')"
+                                onclick="setSegmentValue('priority', 'High')"
                                 class="priority-btn flex-1 py-2 text-center rounded-md font-label-md text-label-md transition-all {{ old('priority', $task->priority ?? 'Medium') === 'High' ? 'bg-white shadow-sm text-secondary font-bold' : 'text-on-surface-variant hover:bg-surface-container-high' }}"
                                 type="button">High</button>
                         </div>
                         @error('priority') <p class="text-error text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Status Segmented Control -->
+                    <div class="space-y-2">
+                        <label
+                            class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Status</label>
+                        <input type="hidden" name="status" id="status-input" value="{{ old('status', $task->status ?? 'pending') }}">
+                        <div class="flex p-1 bg-surface-container-low rounded-lg border border-outline-variant">
+                            <button
+                                onclick="setSegmentValue('status', 'pending')"
+                                class="status-btn flex-1 py-2 text-center rounded-md font-label-md text-[10px] transition-all {{ old('status', $task->status ?? 'pending') === 'pending' ? 'bg-white shadow-sm text-secondary font-bold' : 'text-on-surface-variant hover:bg-surface-container-high' }}"
+                                type="button">Pending</button>
+                            <button
+                                onclick="setSegmentValue('status', 'in_progress')"
+                                class="status-btn flex-1 py-2 text-center rounded-md font-label-md text-[10px] transition-all {{ old('status', $task->status ?? 'pending') === 'in_progress' ? 'bg-white shadow-sm text-secondary font-bold' : 'text-on-surface-variant hover:bg-surface-container-high' }}"
+                                type="button">Progress</button>
+                            <button
+                                onclick="setSegmentValue('status', 'completed')"
+                                class="status-btn flex-1 py-2 text-center rounded-md font-label-md text-[10px] transition-all {{ old('status', $task->status ?? 'pending') === 'completed' ? 'bg-white shadow-sm text-secondary font-bold' : 'text-on-surface-variant hover:bg-surface-container-high' }}"
+                                type="button">Done</button>
+                        </div>
+                        @error('status') <p class="text-error text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <button
@@ -109,14 +131,27 @@
                 </div>
 
                 <script>
-                    function setPriority(level) {
+                    function setSegmentValue(field, val) {
                         // Update hidden input
-                        document.getElementById('priority-input').value = level;
+                        document.getElementById(`${field}-input`).value = val;
                         
                         // Update UI
-                        const btns = document.querySelectorAll('.priority-btn');
+                        const btns = document.querySelectorAll(`.${field}-btn`);
                         btns.forEach(btn => {
-                            if (btn.innerText === level) {
+                            const btnValue = btn.innerText.toLowerCase().replace(' ', '_');
+                            const targetValue = val.toLowerCase();
+                            
+                            // Handle semantic mapping (e.g. "Done" -> "completed")
+                            let isMatch = false;
+                            if (field === 'status') {
+                                if (targetValue === 'pending' && btn.innerText === 'Pending') isMatch = true;
+                                if (targetValue === 'in_progress' && btn.innerText === 'Progress') isMatch = true;
+                                if (targetValue === 'completed' && btn.innerText === 'Done') isMatch = true;
+                            } else {
+                                isMatch = (btn.innerText === val);
+                            }
+
+                            if (isMatch) {
                                 btn.classList.add('bg-white', 'shadow-sm', 'text-secondary', 'font-bold');
                                 btn.classList.remove('text-on-surface-variant', 'hover:bg-surface-container-high');
                             } else {

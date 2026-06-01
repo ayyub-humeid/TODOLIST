@@ -41,6 +41,7 @@
             border-radius: 10px;
         }
     </style>
+    @stack('styles')
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",

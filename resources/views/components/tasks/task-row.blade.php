@@ -24,11 +24,21 @@
                 {{ $task->priority }}
             </span>
         </div>
+        <div class="w-24 flex justify-center">
+            <span class="px-3 py-1 {{ $task->status_color }} rounded-full text-[10px] font-bold uppercase tracking-tighter">
+                {{ str_replace('_', ' ', $task->status) }}
+            </span>
+        </div>
         <div class="w-20 flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <a href="{{ route('tasks.edit', $task) }}" 
                class="p-2 hover:bg-surface-container rounded-lg text-secondary transition-colors"
                title="Edit Task">
                 <span class="material-symbols-outlined text-[20px]">edit</span>
+            </a>
+            <a href="{{ route('tasks.show', $task) }}" 
+               class="p-2 hover:bg-surface-container rounded-lg text-secondary transition-colors"
+               title="Show Task">
+                <span class="material-symbols-outlined text-[20px]">info</span>
             </a>
             <button onclick="deleteTask({{ $task->id }})" 
                     class="p-2 hover:bg-error-container/20 rounded-lg text-error transition-colors"

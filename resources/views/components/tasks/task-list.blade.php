@@ -9,6 +9,7 @@
         <div class="hidden md:flex items-center gap-16 pr-12">
             <span class="w-32 text-center">Due Date</span>
             <span class="w-24 text-center">Priority</span>
+            <span class="w-24 text-center">Status</span>
             <span class="w-20 text-right">Actions</span>
         </div>
     </div>
