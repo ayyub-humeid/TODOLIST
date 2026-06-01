@@ -76,8 +76,7 @@
         function deleteTask(taskId) {
             if (!confirm('Are you sure you want to delete this task?')) return;
 
-            // Use an absolute path or the correct admin prefix
-            const url = `{{ url('admin/tasks') }}/${taskId}`;
+            const url = `{{ url('tasks') }}/${taskId}`;
 
             fetch(url, {
                 method: 'DELETE',
